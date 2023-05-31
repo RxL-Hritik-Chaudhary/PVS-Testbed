@@ -1,0 +1,2 @@
+rootProject.name = 'pvSignalTest'
+include ':Frontend', ':Backend'

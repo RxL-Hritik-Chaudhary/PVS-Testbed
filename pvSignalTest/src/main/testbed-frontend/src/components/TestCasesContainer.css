@@ -1,0 +1,279 @@
+a {
+  text-decoration: none;
+  color: #ffff;
+}
+
+.tableHeader {
+	display:'none';
+	font-size:30px;
+  border: 1px solid double;
+}
+
+.tableContainer{
+    background-color: white;
+    height: 450px;
+    overflow-x: hidden;
+    margin : 0 10px 0 20px;
+}
+
+Table thead{
+    position: sticky;
+    top: 0px;
+    margin: 0 0 0 0;
+}
+
+.logo {
+  width: 6%;
+}
+
+.trueBooleanColor {
+	
+	color: #00cc33;
+}
+
+.falseBooleanColor {
+	color: #ff531a;
+}
+.btnDesign {
+	background-color: #97d34c;
+	color: white;
+	font-size: 13px;
+	border-radius: 2em;
+    padding: 3px 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 3px;
+    font-family: inherit;
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.btnDesign:hover {
+	background-color: #7ab92d;
+
+	}
+	
+.btnDeleteDesign {
+	background-color: steelblue;
+	color: white;
+	font-size: 13px;
+	border-radius: 2em;
+    padding: 3px 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 3px;
+    font-family: inherit;
+    box-shadow: 0 2px 6px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.btnDeleteDesign:hover {
+background-color: #6C9DC6 ;
+
+}
+.logoContainer {
+  display: inline;
+}
+
+.App>.Post {
+  background-color: transparent;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.16), 0 5px 8px rgba(0, 0, 0, 0.23);
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+#statusSuccess {
+  display: inline-block;
+  margin-left: 8px;
+  width: 10px;
+  height: 10px;
+  border: 4px solid green;
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+#statusFail {
+  display: inline-block;
+  margin-left: 8px;
+  width: 10px;
+  height: 10px;
+  border: 4px solid red;
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.apiSuccess {
+  display: inline;
+  font-size: 15px;
+  color: greenyellow;;
+}
+
+.apiFail {
+  display: inline;
+  font-size: 15px;
+  color: red;
+}
+
+.plus {
+  color: #2b8f28;
+}
+
+.minus {
+  color: steelblue;
+}
+
+.coinName {
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.sub {
+  display: block;
+  font-size: xx-small;
+  font-weight: 100;
+  color: #a4a4a4;
+}
+
+.rdt_TableRow {
+  min-height: 45px;
+}
+
+.sc-eNQAEJ>.rdt_Table {
+  max-width: 100%;
+}
+
+.rdt_Table>.rdt_TableBody {
+  max-height: 83vh;
+}
+
+.rdt_TableHeader {
+  max-height: 4vh;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.rdt_TableFooter {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+  padding: 0px 0px 0px 0px !important;
+}
+
+.loader-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    
+    z-index: 1;
+}
+
+.loader-text {
+	color: #2b8f28;
+}
+
+.spinner {
+    width: 64px;
+    height: 64px;
+    border: 8px solid;
+    border-color: #3d5af1 transparent #3d5af1 transparent;
+    border-radius: 50%;
+    animation: spin-anim 1.2s linear infinite;
+}
+
+.stackTraceCol {
+	white-space: nowrap;      /*keep text on one line */
+	overflow: hidden;         /*prevent text from being shown outside the border */
+	text-overflow: ellipsis;  
+}
+
+@keyframes spin-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+  ##Device = Desktops
+  ##Screen = 1281px to higher resolution desktops
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .App>.Post {
+    width: 100%;
+  }
+
+  .rdt_Table .rdt_TableHeader {
+    width: 100%
+  }
+}
+
+/*
+  ##Device = Tablets, Ipads (landscape)
+  ##Screen = B/w 768px to 1024px
+*/
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .App>.Post {
+    width: 100%;
+  }
+
+  .rdt_Table .rdt_TableHeader {
+    width: 100%
+  }
+}
+
+/*
+  ##Device = Low Resolution Tablets, Mobiles (Landscape)
+  ##Screen = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .App>.Post {
+    width: 100%;
+  }
+
+  .rdt_Table .rdt_TableHeader {
+    width: 100%
+  }
+}
+
+/*
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .App>.Post {
+    width: 100%;
+  }
+
+  .rdt_Table .rdt_TableHeader {
+    width: 100%
+  }
+}
