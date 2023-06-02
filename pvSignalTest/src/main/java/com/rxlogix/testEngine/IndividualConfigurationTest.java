@@ -78,7 +78,6 @@ public class IndividualConfigurationTest extends BrowserSetup {
 	            
 	            defaultCheckedBoxes("individual",defaultCheckedBoxesList);
 			    delay(2000);
-			    //defaultUncheckedBoxesList.addAll(Arrays.asList("groupBySmq"));
 	            defaultUncheckedBoxes("individual",defaultUncheckedBoxesList);
 
 			    //date range type
@@ -147,16 +146,6 @@ public class IndividualConfigurationTest extends BrowserSetup {
 			    addAlertName(alertName);
 			    delay(3000);
 			    
-//			    delay(2000);
-//			    driver.findElement(By.id("select2-assignedTo-container")).click();
-//			    delay(2000);
-//			    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys("sig");
-			    
-//			    driver.findElement(By.id("select2-assignedTo-container")).click();
-//			    delay(1000);
-//			    System.out.println(dto.getAssignedTo());
-//			    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(dto.getAssignedTo());
-//			    delay(2000);
 			    selectPriority(dto.getPriority());
 			    delay(2000);
 			    selectAssignedTo(dto.getAssignedTo());

@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -27,8 +29,9 @@ import com.rxlogix.pvSignalTest.service.FileStorageService;
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping("files")
-public class FileController {
-
+public class FileController implements FileControllerImpl{
+	private static final Logger logger = LogManager.getLogger(FileController.class);
+	
 	@Autowired
 	private FileStorageService fileStorageService;
 	
@@ -41,6 +44,7 @@ public class FileController {
 				.toUriString();
 		
 		FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+		logger.debug("----------{} file uploaded successfully---------",() -> fileName);
 		return new ResponseEntity<FileResponse>(fileResponse,HttpStatus.OK);
 	}
 	

@@ -28,35 +28,20 @@ import com.rxlogix.pvSignalTest.service.FileManagerService;
 import com.rxlogix.testEngine.AggregateConfigurationTest;
 
 
-
+//todo: merge with other controller
+//FileController is used to save the file and FileManagerController is used to retrieve data from saved file
 @Controller
 @CrossOrigin("http://localhost:3000")
-public class FileManagerController {
+public class FileManagerController implements FileManagerControllerImpl{
 	
 	@Autowired
 	FileManagerService fileService;
-	AggregateConfigurationTest aggregateConfigurationTest = new AggregateConfigurationTest();
+	//todo: remove if not used
+	//AggregateConfigurationTest aggregateConfigurationTest = new AggregateConfigurationTest();
 	
 	
 	private final Path root = Paths.get("importFile");
 	
-
-	 @RequestMapping(value = "/api/uploadTestCases", method = RequestMethod.POST)
-	 @ResponseBody
-	  public ResponseEntity<Boolean> uploadFiles(@RequestParam MultipartFile file) {
-		System.out.println("uploadFile method called:");
-	    String message = "";
-	    try {
-	    	System.out.print(file);
-	    	//fileService.save(file);
-	       //message = "Uploaded the file successfully: " + file.getOriginalFilename();
-	       return ResponseEntity.status(HttpStatus.OK).body(true);
-	      //return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-	    } catch (Exception e) {
-	      //message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-	      return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(false);
-	    }
-	  }
 	
 	@RequestMapping(value = "/api/getFileInfo", method = RequestMethod.GET)
 	@ResponseBody
@@ -76,38 +61,6 @@ public class FileManagerController {
 	  }
 	
 	
-	@RequestMapping(value = "/getTestCaseData", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public ResponseEntity<List<TestCaseDTO>> getFileData() throws IOException{
-		
-		List<TestCaseDTO> testCaseDTOList = fileService.getImportFileData();
-		
-		return ResponseEntity.status(HttpStatus.OK).body(testCaseDTOList);
-	}
-	
-	@RequestMapping(value = "/api/checkIfFileExists", method = RequestMethod.GET)
-	@ResponseBody
-	public ResponseEntity<Boolean> checkIfFileExists() throws IOException{
-		
-		if(fileService.checkIfFileExists()) {
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-		}
-		
-		return ResponseEntity.status(HttpStatus.OK).body(false);
-	}
-	
-	@RequestMapping(value = "/api/deleteFile", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Boolean> deleteFile() throws IOException{
-		
-		
-		if(fileService.deleteFile()) {
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-		} else {
-			return ResponseEntity.status(HttpStatus.OK).body(false);
-		}
-		
-	}
 	
 	
 

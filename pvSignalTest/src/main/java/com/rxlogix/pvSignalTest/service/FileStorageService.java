@@ -20,7 +20,7 @@ import com.rxlogix.pvSignalTest.message.FileStorageProperties;
 import com.rxlogix.pvSignalTest.message.MyFileNotFoundException;
 
 @Service
-public class FileStorageService {
+public class FileStorageService implements FileStorageServiceImpl{
 
 	private final Path fileStorageLocation;
 	

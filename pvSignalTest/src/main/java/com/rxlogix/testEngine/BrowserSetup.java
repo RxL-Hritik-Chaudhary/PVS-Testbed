@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.By;
@@ -19,9 +21,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import com.rxlogix.pvSignalTest.controller.PvSignalTestController;
 import com.rxlogix.pvSignalTest.dto.TestCaseDTO;
 
 public class BrowserSetup {
+	private static final Logger logger = LogManager.getLogger(BrowserSetup.class);
+
 	public static Properties properties;
 	static WebDriver driver;
 	private Map<String, Object> vars;
@@ -29,29 +34,28 @@ public class BrowserSetup {
 	private StringBuffer verificationErrors = new StringBuffer();
 	@Before
     public void setUp() throws Exception {
-		System.out.println("Setting Up the browser");
+		logger.debug("Setting Up the browser");
 		driver = new ChromeDriver();
         properties = PropertiesWrapper.getPropertiesForUIConfig("");
         String driverKeyName = properties.getProperty("driver.key.name");
         String webdirver = properties.getProperty("browser.driver");
-        System.out.println("=========webdirver======================"+webdirver);
+		logger.debug("============webdirver======================", () -> webdirver);
+
         System.setProperty(driverKeyName, webdirver);
-		
-
-
+	
       
        
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
         
         //TODO pick from config file
-       
-        //driver.get("http://localhost:7070/signal/login/auth");
-        //driver.get("http://10.100.21.22:7070/signal/login/auth");
-        driver.get("http://10.100.22.105:7070/signal/login/auth");
+        //done
+        String appUrl = properties.getProperty("app.url");
+        driver.get(appUrl);
+        
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(3600, TimeUnit.SECONDS);
-		System.out.println("Browser setup done");
+
     }
 	
 	@After
@@ -75,8 +79,7 @@ public class BrowserSetup {
 	
 	public void defaultCheckedBoxes(String alertType, List<String> defaultCheckBoxList) {
         for (String property : defaultCheckBoxList) {
-        	System.out.println("property---------------"+property);
-            System.out.println(alertType.concat(".alert.").concat(property));
+        	
             if(!driver.findElement(By.id(property)).isSelected()) {
             	driver.findElement(By.id(property)).click();
             	try {
@@ -106,13 +109,14 @@ public class BrowserSetup {
     }
 	
 	public void login() {
-		System.out.println("Logging in the system");
+		logger.debug("---------Logging in the system---------");
 		driver.findElement(By.id("username")).sendKeys("signaldev");
 	    driver.findElement(By.id("password")).sendKeys("signaldev");
 	    driver.findElement(By.id("loginSubmit")).click();
 	    driver.findElement(By.cssSelector(".md-settings-applications")).click();
 	    driver.findElement(By.cssSelector(".md-settings-applications")).click();
-	    System.out.println("Logged in system");
+		logger.debug("---------Logged in successfully----------");
+
 	    try {
 			delay(1000);
 		} catch (Exception e) {
@@ -128,7 +132,6 @@ public class BrowserSetup {
 	}
 	
 	public void selectPriority(String priority) {
-		System.out.println(priority);
 	    driver.findElement(By.id("priority")).click();
 	    {
 	      WebElement dropdown = driver.findElement(By.id("priority"));
@@ -142,7 +145,6 @@ public class BrowserSetup {
 	    try {
 	    	driver.findElement(By.id("select2-assignedTo-container")).click();
 		    delay(1000);
-		    System.out.println(assignedTo);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(assignedTo);
 		    delay(2000);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(Keys.ENTER);
@@ -180,7 +182,6 @@ public class BrowserSetup {
 	    		dto.setIsIntegrated(true);
 	    	}
 	        for (String dataSrc : dataSources) {
-	            System.out.println(dataSrc);
 		        driver.findElement(By.cssSelector(".select2-container--focus .select2-selection__rendered")).click();
 		        delay(2000);
 			    driver.findElement(By.cssSelector(".select2:nth-child(2) .select2-search:nth-child(2) > .select2-search__field")).sendKeys(dataSrc);
@@ -200,7 +201,6 @@ public class BrowserSetup {
 	    try {
 	    	driver.findElement(By.cssSelector(".wrapper:nth-child(1) .fa")).click();
 			delay(2000);
-			System.out.println(dto.getIsIntegrated());
 	    	if(dto.getIsIntegrated()) {
 				driver.findElement(By.xpath("//*[@id=\"parentDivDataSources\"]/span/span[1]/span/ul/li/input")).click();
 			    delay(2000);
@@ -219,7 +219,6 @@ public class BrowserSetup {
 					    delay(2000);
 					    driver.findElement(By.cssSelector(".productColumn")).sendKeys(product);
 					    delay(2000);
-					    System.out.println("Sending Keys");
 					    driver.findElement(By.cssSelector(".productColumn")).sendKeys(Keys.ENTER);
 					    delay(5000);
 					    driver.findElement(By.cssSelector(".dicLi")).click();

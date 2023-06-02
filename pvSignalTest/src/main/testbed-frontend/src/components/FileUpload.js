@@ -91,7 +91,7 @@ class App extends Component {
               File Upload!
             </h3>
             <div>
-                <input type="file" onChange={this.onFileChange} />
+                <input type="file" onChange={this.onFileChange} accept=".xls,.xlsx" />
                 <button className='btnDesign' onClick={this.onFileUpload}>
                   Upload!
                 </button>
