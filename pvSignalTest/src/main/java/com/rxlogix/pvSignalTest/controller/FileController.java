@@ -23,17 +23,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rxlogix.pvSignalTest.dto.FileResponse;
-import com.rxlogix.pvSignalTest.service.FileStorageService;
+import com.rxlogix.pvSignalTest.service.FileStorageServiceImpl;
 
 
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping("files")
-public class FileController implements FileControllerImpl{
+public class FileController {
 	private static final Logger logger = LogManager.getLogger(FileController.class);
 	
 	@Autowired
-	private FileStorageService fileStorageService;
+	private FileStorageServiceImpl fileStorageService;
 	
 	@PostMapping
 	public ResponseEntity<FileResponse> uploadFile(@RequestParam("file") MultipartFile file){
@@ -44,13 +44,15 @@ public class FileController implements FileControllerImpl{
 				.toUriString();
 		
 		FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+		System.out.println("Upload mehtod .........");
 		logger.debug("----------{} file uploaded successfully---------",() -> fileName);
 		return new ResponseEntity<FileResponse>(fileResponse,HttpStatus.OK);
 	}
 	
 	@GetMapping("/{fileName:.+}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName,HttpServletRequest request){
-		
+		System.out.println("Download mehtod .........");
+
 		Resource resource = fileStorageService.loadFileAsResource(fileName);
 		
 		String contentType = null;

@@ -30,7 +30,7 @@ import com.rxlogix.pvSignalTest.dto.ExStatusDTO;
 import com.rxlogix.pvSignalTest.dto.ExStatusRepository;
 import com.rxlogix.pvSignalTest.dto.NativeRepository;
 import com.rxlogix.pvSignalTest.dto.TestCaseDTO;
-import com.rxlogix.pvSignalTest.service.FileManagerService;
+import com.rxlogix.pvSignalTest.service.FileManagerServiceImpl;
 import com.rxlogix.testEngine.AggregateConfigurationTest;
 import com.rxlogix.testEngine.IndividualConfigurationTest;
 import com.rxlogix.testEngine.testSignalLogin;
@@ -43,7 +43,7 @@ import org.apache.logging.log4j.Logger;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
-public class PvSignalTestController implements PvSignalTestControllerImpl{
+public class PvSignalTestController {
 	private static final Logger logger = LogManager.getLogger(PvSignalTestController.class);
 
 	// TODO: why @resource?
@@ -52,7 +52,7 @@ public class PvSignalTestController implements PvSignalTestControllerImpl{
 	ExStatusRepository exStatusRepository;
 
 	@Autowired
-	FileManagerService fileService;
+	FileManagerServiceImpl fileService;
 	AggregateConfigurationTest aggregateConfigurationTest = new AggregateConfigurationTest();
 	IndividualConfigurationTest individualConfigurationTest = new IndividualConfigurationTest();
 

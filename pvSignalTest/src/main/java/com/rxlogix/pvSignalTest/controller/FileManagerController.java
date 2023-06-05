@@ -1,13 +1,16 @@
 package com.rxlogix.pvSignalTest.controller;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rxlogix.pvSignalTest.dto.TestCaseDTO;
-import com.rxlogix.pvSignalTest.service.FileManagerService;
+import com.rxlogix.pvSignalTest.service.FileManagerServiceImpl;
 import com.rxlogix.testEngine.AggregateConfigurationTest;
 
 
@@ -32,10 +35,17 @@ import com.rxlogix.testEngine.AggregateConfigurationTest;
 //FileController is used to save the file and FileManagerController is used to retrieve data from saved file
 @Controller
 @CrossOrigin("http://localhost:3000")
-public class FileManagerController implements FileManagerControllerImpl{
+public class FileManagerController {
+	public FileManagerController(Environment env, FileManagerServiceImpl fileService) {
+		super();
+		this.env = env;
+		this.fileService = fileService;
+	}
+
+	private final Environment env;
 	
 	@Autowired
-	FileManagerService fileService;
+	FileManagerServiceImpl fileService;
 	//todo: remove if not used
 	//AggregateConfigurationTest aggregateConfigurationTest = new AggregateConfigurationTest();
 	
@@ -51,6 +61,15 @@ public class FileManagerController implements FileManagerControllerImpl{
 		testCaseDTOList = fileService.getImportFileData();
 		return ResponseEntity.status(HttpStatus.OK).body(testCaseDTOList);
 	}
+	@RequestMapping(value = "/api/checkFileExists", method = RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<String> checkFileIsExists() throws IOException{
+		File f = new File(env.getProperty("constants.savedFileLocation"));
+		if(f.exists() && !f.isDirectory()) { 
+			return new ResponseEntity<String>("true", HttpStatus.OK);
+		}
+		return new ResponseEntity<String>("false", HttpStatus.OK);
+	}
 	
 	@GetMapping("/files/{filename:.+}")
 	  @ResponseBody
@@ -59,9 +78,5 @@ public class FileManagerController implements FileManagerControllerImpl{
 	    return ResponseEntity.ok()
 	        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
 	  }
-	
-	
-	
-	
 
 }
