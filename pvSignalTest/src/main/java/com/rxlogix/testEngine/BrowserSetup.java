@@ -20,12 +20,14 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.LoggerFactory;
 
 import com.rxlogix.pvSignalTest.controller.PvSignalTestController;
 import com.rxlogix.pvSignalTest.dto.TestCaseDTO;
+import com.rxlogix.pvSignalTest.service.FileManagerServiceImpl;
 
 public class BrowserSetup {
-	private static final Logger logger = LogManager.getLogger(BrowserSetup.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BrowserSetup.class);
 
 	public static Properties properties;
 	static WebDriver driver;
@@ -34,12 +36,12 @@ public class BrowserSetup {
 	private StringBuffer verificationErrors = new StringBuffer();
 	@Before
     public void setUp() throws Exception {
-		logger.debug("Setting Up the browser");
+		logger.info("-----Setting Up the browser-----");
 		driver = new ChromeDriver();
         properties = PropertiesWrapper.getPropertiesForUIConfig("");
         String driverKeyName = properties.getProperty("driver.key.name");
         String webdirver = properties.getProperty("browser.driver");
-		logger.debug("============webdirver======================", () -> webdirver);
+		logger.info("==============webdirver======================", webdirver);
 
         System.setProperty(driverKeyName, webdirver);
 	
@@ -52,7 +54,7 @@ public class BrowserSetup {
         //done
         String appUrl = properties.getProperty("app.url");
         driver.get(appUrl);
-        
+        logger.info("{}",appUrl);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(3600, TimeUnit.SECONDS);
 
@@ -63,6 +65,8 @@ public class BrowserSetup {
         driver.quit();
         String verificationErrorString = verificationErrors.toString();
         if (!"".equals(verificationErrorString)) {
+        	logger.error("Error encountered");
+        	logger.error("{}",verificationErrorString);
             fail(verificationErrorString);
         }
     }
@@ -73,7 +77,7 @@ public class BrowserSetup {
         Thread.sleep(time);
 		} 
 		catch(Exception ex) {
-			System.out.print(ex);
+        	logger.error("Error encountered in deleay() method ... {}",ex);
 		}
     }
 	
@@ -109,13 +113,13 @@ public class BrowserSetup {
     }
 	
 	public void login() {
-		logger.debug("---------Logging in the system---------");
+		logger.info("---------Logging in the system---------");
 		driver.findElement(By.id("username")).sendKeys("signaldev");
 	    driver.findElement(By.id("password")).sendKeys("signaldev");
 	    driver.findElement(By.id("loginSubmit")).click();
 	    driver.findElement(By.cssSelector(".md-settings-applications")).click();
 	    driver.findElement(By.cssSelector(".md-settings-applications")).click();
-		logger.debug("---------Logged in successfully----------");
+		logger.info("---------Logged in successfully----------");
 
 	    try {
 			delay(1000);

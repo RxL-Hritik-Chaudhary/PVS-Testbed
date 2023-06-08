@@ -153,7 +153,7 @@ class ExecutionContainer extends Component {
 	async componentDidMount() {
 
 
-		setInterval(this.fetchExeStatus, 5000)
+		setInterval(this.fetchExeStatus, 7500)
 
 
 	}

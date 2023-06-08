@@ -27,6 +27,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
@@ -40,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileManagerServiceImpl implements FileManagerService {
 	
-	private static final Logger logger = LogManager.getLogger(FileManagerServiceImpl.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FileManagerServiceImpl.class);
 	  
 	private final Environment env;
 
@@ -81,7 +82,7 @@ public class FileManagerServiceImpl implements FileManagerService {
 	public List<TestCaseDTO> getImportFileData(){
 		List<TestCaseDTO> testCaseDTOList = new ArrayList<TestCaseDTO>();
 		try {
-			logger.debug("------------------------- getting test case data ----------------------------------");
+			logger.info("------------------------- getting test case data ----------------------------------");
 			
 			Path path = this.root.resolve(fileName);
 			
@@ -235,9 +236,9 @@ public class FileManagerServiceImpl implements FileManagerService {
 			rowIndex++;
 			}
 		} catch( Exception ex) {
-			logger.debug("Reading file failed with error {} ",() -> ex);
+			logger.error("Reading file failed with error {} ", ex);
 		}
-			
+		logger.info("Test cases DTO prepared successfully");
 		return testCaseDTOList;
 	}
 	

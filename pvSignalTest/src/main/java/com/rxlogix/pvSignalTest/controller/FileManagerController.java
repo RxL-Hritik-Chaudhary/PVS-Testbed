@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -36,6 +39,9 @@ import com.rxlogix.testEngine.AggregateConfigurationTest;
 @Controller
 @CrossOrigin("http://localhost:3000")
 public class FileManagerController {
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FileManagerController.class);
+
+	
 	public FileManagerController(Environment env, FileManagerServiceImpl fileService) {
 		super();
 		this.env = env;
@@ -64,10 +70,13 @@ public class FileManagerController {
 	@RequestMapping(value = "/api/checkFileExists", method = RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<String> checkFileIsExists() throws IOException{
+		logger.info("Checking if file already exists");
 		File f = new File(env.getProperty("constants.savedFileLocation"));
 		if(f.exists() && !f.isDirectory()) { 
+			logger.warn("Checked. File Already exists in system");
 			return new ResponseEntity<String>("true", HttpStatus.OK);
 		}
+		logger.warn("Checked. File doesn't exists");
 		return new ResponseEntity<String>("false", HttpStatus.OK);
 	}
 	

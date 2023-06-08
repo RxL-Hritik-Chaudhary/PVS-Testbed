@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ import com.rxlogix.pvSignalTest.service.FileStorageServiceImpl;
 @CrossOrigin("http://localhost:3000")
 @RequestMapping("files")
 public class FileController {
-	private static final Logger logger = LogManager.getLogger(FileController.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FileController.class);
 	
 	@Autowired
 	private FileStorageServiceImpl fileStorageService;
@@ -45,13 +46,12 @@ public class FileController {
 		
 		FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
 		System.out.println("Upload mehtod .........");
-		logger.debug("----------{} file uploaded successfully---------",() -> fileName);
+		logger.info("----------{} file uploaded successfully---------",fileName);
 		return new ResponseEntity<FileResponse>(fileResponse,HttpStatus.OK);
 	}
 	
 	@GetMapping("/{fileName:.+}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName,HttpServletRequest request){
-		System.out.println("Download mehtod .........");
 
 		Resource resource = fileStorageService.loadFileAsResource(fileName);
 		

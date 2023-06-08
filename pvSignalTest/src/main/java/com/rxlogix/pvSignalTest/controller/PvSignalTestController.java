@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.LoggerFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -44,7 +45,7 @@ import org.apache.logging.log4j.Logger;
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class PvSignalTestController {
-	private static final Logger logger = LogManager.getLogger(PvSignalTestController.class);
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PvSignalTestController.class);
 
 	// TODO: why @resource?
 	// because we inject a bean
@@ -63,7 +64,7 @@ public class PvSignalTestController {
 	// main logic part already in service/testEngine
 	@RequestMapping(value = "/api/runAlerts", method = RequestMethod.POST)
 	public ResponseEntity<List<String>> runAlerts(@RequestBody List<TestCaseDTO> dtoList) {
-		logger.debug("runAlerts() method called");
+		logger.info("runAlerts() method called");
 
 		List<String> alertNames = new ArrayList<>();
 
@@ -77,12 +78,11 @@ public class PvSignalTestController {
 		aggregateConfigurationTest.login();
 
 		Integer size = dtoList.size();
-		System.out.print("size " + size);
 		for (int i = 0; i < size; i++) {
 			TestCaseDTO testCaseDTO = dtoList.get(i);
 			// TODO: ADD LOGGER AND SEND TESTCASEdtoList TO THE METHOD
 			//done
-			logger.debug("Currently executing Alert details : {}", () -> testCaseDTO.toString());
+			logger.info("Currently executing Alert details : {}", testCaseDTO.toString());
 
 			try {
 
@@ -113,9 +113,24 @@ public class PvSignalTestController {
 	@ModelAttribute
 	@RequestMapping(value = "/exeStatus", method = RequestMethod.POST)
 	public ResponseEntity<List<Map<String, Object>>> testApi(@RequestBody List<String> alertNames) {
+		logger.info("Fetching new execution status of alerts.....");
 		List<Map<String, Object>> executionStatus = exStatusRepository.fetchExecutionStatus();
-
+		logger.info("Fetched successfully");
 		return new ResponseEntity<List<Map<String, Object>>>(executionStatus, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/deleteAlerts", method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteAlerts() {
+		logger.info("Delete method called to delete '%Smoke%' Named Alerts");
+		try {
+			exStatusRepository.deleteAutomationAlerts();
+			logger.info("Alerts deletion successful");
+			return new ResponseEntity<String>("Success", HttpStatus.OK);
+		}
+		catch(Exception ex) {
+			logger.error("Error encountered during the deletion of alerts with exception {}",ex);
+			return new ResponseEntity<String>("Failed", HttpStatus.OK);
+		}
 	}
  
 }
