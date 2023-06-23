@@ -147,7 +147,8 @@ public class BrowserSetup {
 	public void selectAssignedTo(String assignedTo) {
 		
 	    try {
-	    	driver.findElement(By.id("select2-assignedTo-container")).click();
+	    	System.out.println(assignedTo);
+	        driver.findElement(By.id("select2-assignedTo-container")).click();
 		    delay(1000);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(assignedTo);
 		    delay(2000);

@@ -308,19 +308,19 @@ const columns = [
 		},
 	},
 	{
-		name: 'Drug Type',
-		selector: row => `${row.drugType}`,
+		name: 'Product Type',
+		selector: row => `${row.productType}`,
 		sortable: true,
 		ignoreRowClick: true,
 		width: '200px',
 		cell: row => {
-			if (row.drugType == "null") {
+			if (row.productType == "null") {
 				return (
 					<div>-</div>
 				);
 			}
 			else {
-				return row.drugType
+				return row.productType
 			}
 		},
 	},

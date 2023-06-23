@@ -121,11 +121,17 @@ public class AggregateConfigurationTest extends BrowserSetup {
 			}
 			delay(1000);
 
-			// drug type
-			driver.findElement(By.id("drugType")).click();
-			{
-				WebElement dropdown = driver.findElement(By.id("drugType"));
-				dropdown.findElement(By.xpath("//option[. = '" + dto.getDrugType() + "']")).click();
+			// product type
+			driver.findElement(By.cssSelector(".select2-selection__choice:nth-child(2) > .select2-selection__choice__remove")).click();
+			delay(500);
+			String[] productTypeValues = dto.getProductType().split(",");
+		    for(String prodType: productTypeValues) {
+			    driver.findElement(By.cssSelector(".col-md-3:nth-child(4) .select2-search__field")).sendKeys(prodType);
+			    delay(500);
+			    driver.findElement(By.cssSelector(".col-md-3:nth-child(4) .select2-search__field")).sendKeys(Keys.ENTER);
+			    delay(500);
+			    driver.findElement(By.cssSelector(".select2-container--focus .select2-selection__rendered")).click();
+			    delay(500);
 			}
 			delay(1000);
 

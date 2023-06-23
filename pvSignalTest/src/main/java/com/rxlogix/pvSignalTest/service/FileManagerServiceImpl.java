@@ -199,8 +199,8 @@ public class FileManagerServiceImpl implements FileManagerService {
 						case "Date Range":
 							dto.setDateRange(value);
 							break;
-						case "Drug Type":
-							dto.setDrugType(value);
+						case "Product Type":
+							dto.setProductType(value);
 							break;
 						case "Evaluate Case Date On":
 							dto.setEvaluateCaseDateOn(value);
