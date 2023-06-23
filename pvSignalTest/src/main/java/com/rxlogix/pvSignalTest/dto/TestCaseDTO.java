@@ -24,7 +24,7 @@ public class TestCaseDTO {
     private Boolean isIncludeMissingCases;
     private Boolean isApplyAlertStopList;
     private Boolean isIncludeMedicallyConfirmedCases;
-    private String drugType;
+    private String productType;
     private String evaluateCaseDateOn;
     private String limitCaseSeries;
     
@@ -202,12 +202,12 @@ public class TestCaseDTO {
 		this.versionAsOfDate = versionAsOfDate;
 	}
 
-	public String getDrugType() {
-		return drugType;
+	public String getProductType() {
+		return productType;
 	}
 
-	public void setDrugType(String drugType) {
-		this.drugType = drugType;
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
 	public String getEvaluateCaseDateOn() {

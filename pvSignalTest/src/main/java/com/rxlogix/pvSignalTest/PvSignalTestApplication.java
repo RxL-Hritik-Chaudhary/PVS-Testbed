@@ -15,10 +15,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import com.rxlogix.pvSignalTest.message.FileStorageProperties;
-import com.rxlogix.pvSignalTest.service.FileManagerService;
+import com.rxlogix.pvSignalTest.service.FileManagerServiceImpl;
 import com.rxlogix.pvSignalTest.dto.NativeQueryDTO;
 import com.rxlogix.pvSignalTest.dto.NativeRepository;
-
+import org.springframework.core.env.Environment;
 
 @SpringBootApplication
 @EnableConfigurationProperties({
@@ -27,7 +27,7 @@ import com.rxlogix.pvSignalTest.dto.NativeRepository;
 public class PvSignalTestApplication implements CommandLineRunner {
 	
 	@Resource
-	FileManagerService fileService;
+	FileManagerServiceImpl fileService;
 	//@Resource
 	//NativeRepository nativeRepo; // = new NativeRepository() ; 
 

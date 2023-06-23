@@ -8,9 +8,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;   
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.LoggerFactory;   
 
 public class testSignalLogin extends BrowserSetup{
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(testSignalLogin.class);
+
+	
 	 static WebDriver driver = new ChromeDriver();
 	 private Map<String, Object> vars;
 	 static JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -25,7 +29,7 @@ public class testSignalLogin extends BrowserSetup{
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		System.out.println("Test PV Signal Main called");
+		logger.info("Test PV Signal Main called");
 	}
 	
 

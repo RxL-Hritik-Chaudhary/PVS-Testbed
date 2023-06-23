@@ -5,18 +5,39 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.ListUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import com.rxlogix.testEngine.BrowserSetup;
 
 @CrossOrigin("http://localhost:3000")
 @Component
 public class ExStatusRepository {
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExStatusRepository.class);
+	
 	@Autowired 
     private NamedParameterJdbcTemplate jdbcTemplate;
+	
+	public void deleteAutomationAlerts() {
+		try {
+			SqlParameterSource namedParameters = new MapSqlParameterSource();
+	        String deletionQuery = " UPDATE rconfig "
+	        		+ " SET is_deleted=1 "
+	        		+ " WHERE name like 'Smoke%' ";
+	        
+	        jdbcTemplate.update(deletionQuery, namedParameters);
+		}
+		catch(Exception ex) {
+			logger.error("Deletion query failed with trace {}",ex);
+		}
+		
+	}
 
     public List<Map<String, Object>> fetchExecutionStatus(){        
         MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -79,22 +100,22 @@ public class ExStatusRepository {
         String sqlAggAlert = "select DISTINCT exs.CONFIG_ID,exs.NAME,rc.ADHOC_RUN, sca.NAME,exs.EX_STATUS, count(*) over (PARTITION BY exs.name) as pec_count, " 
         							+ " exs.TYPE,exs.FREQUENCY,exs.DATE_CREATED,DBMS_LOB.substr(rc.PRODUCT_SELECTION, 3000) products,DBMS_LOB.substr(rc.PRODUCT_GROUP_SELECTION, 3000) product_group,exs.START_TIME,exs.END_TIME, DBMS_LOB.substr(exs.STACK_TRACE,1500) STACK_TRACE "
         							+ "from EX_STATUS exs left join RCONFIG rc on exs.CONFIG_ID=rc.ID left join SINGLE_CASE_ALERT sca on exs.CONFIG_ID = sca.ALERT_CONFIGURATION_ID "
-        							+ "where exs.TYPE='Single Case Alert' and rc.ADHOC_RUN=0 and exs.NAME like 'Smoke%'";
+        							+ "where exs.TYPE='Single Case Alert' and rc.ADHOC_RUN=0 and rc.IS_DELETED=0 and exs.NAME like 'Smoke%'";
 
         String sqlAggAdhocAlert = "select DISTINCT exs.CONFIG_ID,exs.NAME,rc.ADHOC_RUN, sca.NAME,exs.EX_STATUS, count(*) over (PARTITION BY exs.name) as pec_count, "
 									+ " exs.TYPE,exs.FREQUENCY,exs.DATE_CREATED,DBMS_LOB.substr(rc.PRODUCT_SELECTION, 3000) products,DBMS_LOB.substr(rc.PRODUCT_GROUP_SELECTION, 3000) product_group,exs.START_TIME,exs.END_TIME, DBMS_LOB.substr(exs.STACK_TRACE,1500) STACK_TRACE "
         							+ "from EX_STATUS exs left join RCONFIG rc on exs.CONFIG_ID=rc.ID left join SINGLE_ON_DEMAND_ALERT sca on exs.CONFIG_ID = sca.ALERT_CONFIGURATION_ID "
-        							+ "where exs.TYPE='Single Case Alert' and rc.ADHOC_RUN=1 and exs.NAME like 'Smoke%'" ;
+        							+ "where exs.TYPE='Single Case Alert' and rc.ADHOC_RUN=1 and rc.IS_DELETED=0 and exs.NAME like 'Smoke%'" ;
         		
         String sqlIcrAlert = "select DISTINCT exs.CONFIG_ID,exs.NAME,rc.ADHOC_RUN, sca.NAME,exs.EX_STATUS, count(*) over (PARTITION BY exs.name) as pec_count, "
 									+ " exs.TYPE,exs.FREQUENCY,exs.DATE_CREATED,DBMS_LOB.substr(rc.PRODUCT_SELECTION, 3000) products,DBMS_LOB.substr(rc.PRODUCT_GROUP_SELECTION, 3000) product_group,exs.START_TIME,exs.END_TIME, DBMS_LOB.substr(exs.STACK_TRACE,1500) STACK_TRACE "
         							+ "from EX_STATUS exs left join RCONFIG rc on exs.CONFIG_ID=rc.ID left join AGG_ALERT sca on exs.CONFIG_ID = sca.ALERT_CONFIGURATION_ID "
-        							+ "where exs.TYPE='Aggregate Case Alert' and rc.ADHOC_RUN=0 and exs.NAME like 'Smoke%'";
+        							+ "where exs.TYPE='Aggregate Case Alert' and rc.ADHOC_RUN=0 and rc.IS_DELETED=0 and exs.NAME like 'Smoke%'";
         		
         String sqlIcrAdhocAlert = "select DISTINCT exs.CONFIG_ID,exs.NAME,rc.ADHOC_RUN, sca.NAME,exs.EX_STATUS, count(*) over (PARTITION BY exs.name) as pec_count, "
 									+ " exs.TYPE,exs.FREQUENCY,exs.DATE_CREATED,DBMS_LOB.substr(rc.PRODUCT_SELECTION, 3000) products,DBMS_LOB.substr(rc.PRODUCT_GROUP_SELECTION, 3000) product_group,exs.START_TIME,exs.END_TIME, DBMS_LOB.substr(exs.STACK_TRACE,1500) STACK_TRACE "
         							+ "from EX_STATUS exs left join RCONFIG rc on exs.CONFIG_ID=rc.ID left join AGG_ON_DEMAND_ALERT sca on exs.CONFIG_ID = sca.ALERT_CONFIGURATION_ID "
-        							+ "where exs.TYPE='Aggregate Case Alert' and rc.ADHOC_RUN=1 and exs.NAME like 'Smoke%'";
+        							+ "where exs.TYPE='Aggregate Case Alert' and rc.ADHOC_RUN=1 and rc.IS_DELETED=0 and exs.NAME like 'Smoke%'";
         		
 
         
