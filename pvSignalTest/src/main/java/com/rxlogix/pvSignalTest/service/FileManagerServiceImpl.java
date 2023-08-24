@@ -183,12 +183,11 @@ public class FileManagerServiceImpl implements FileManagerService {
 							} else 
 								dto.setIsIncludeMissingCases(false);
 							break;
-						case "Apply Alert Stop List":
-							if(value.equals("Yes")) {
-								dto.setIsApplyAlertStopList(true);
-							} else 
-								dto.setIsApplyAlertStopList(false);
-							break;
+						/*
+						 * case "Apply Alert Stop List": if(value.equals("Yes")) {
+						 * dto.setIsApplyAlertStopList(true); } else dto.setIsApplyAlertStopList(false);
+						 * break;
+						 */
 						case "Include Medically Confirmed Cases":
 							if(value.equals("Yes")) {
 								dto.setIsIncludeMedicallyConfirmedCases(true);
@@ -209,7 +208,7 @@ public class FileManagerServiceImpl implements FileManagerService {
 							dto.setLimitCaseSeries(value);
 							break;
 						default:
-							System.out.println(key);
+							logger.warn("Unwanted field/column traced: {} -> {}", key, value);
 							break;
 						}
 					}  

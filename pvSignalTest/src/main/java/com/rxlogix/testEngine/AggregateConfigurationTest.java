@@ -13,10 +13,12 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.slf4j.LoggerFactory;
 
 import com.rxlogix.pvSignalTest.dto.TestCaseDTO;
 
 public class AggregateConfigurationTest extends BrowserSetup {
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BrowserSetup.class);
 
 	@Test
 	public void browserSetup() {
@@ -40,6 +42,7 @@ public class AggregateConfigurationTest extends BrowserSetup {
 
 	@Test
 	public String testSignalLoginMethod(TestCaseDTO dto) throws Exception {
+		logger.info("Aggregate Alert configuration method got called...");
 
 		String alertName = "";
 
@@ -50,19 +53,15 @@ public class AggregateConfigurationTest extends BrowserSetup {
 			driver.findElement(By.linkText("Aggregate Configuration")).click();
 			delay(1000);
 
-			System.out.println(dto.getDataSource());
 
 			if (dto.getDataSource() != null) {
 				addDataSource(dto.getDataSource(), dto);
 			}
 
-			System.out.println(dto.getIsIntegrated());
 
 			List<String> defaultCheckedBoxesList = new ArrayList<String>();
 			List<String> defaultUncheckedBoxesList = new ArrayList<String>();
-			// defaultCheckedBoxesList.addAll(Arrays.asList("excludeFollowUp","missedCases","excludeNonValidCases",
-			// "adhocRun"));
-			System.out.println("dto.getIsAdhoc()==========" + dto.getIsAdhoc());
+			
 			if (dto.getIsAdhoc() && !dto.getIsIntegrated()) {
 				defaultCheckedBoxesList.add("adhocRun");
 			} else {
@@ -99,15 +98,18 @@ public class AggregateConfigurationTest extends BrowserSetup {
 
 			delay(1000);
 			// date range type
+			logger.info("Alert Date RangeType setting up");
 			driver.findElement(By.id("select2-dateRangeType-container")).click();
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).click();
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field"))
 					.sendKeys(dto.getDateRangeType());
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field"))
 					.sendKeys(Keys.ENTER);
+			logger.info("Alert Date RangeType setted-up successfully");
 
 			delay(1000);
 			// evaluate case date on
+			logger.info("Alert Evaluate Case Date setting up");
 			driver.findElement(By.id("select2-evaluateDateAsNonSubmission-container")).click();
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).click();
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field"))
@@ -119,9 +121,11 @@ public class AggregateConfigurationTest extends BrowserSetup {
 				driver.findElement(By.id("asOfVersionDateId")).sendKeys(dto.getVersionAsOfDate());
 
 			}
+			logger.info("Alert Evaluate Case Date setted-up successfully");
 			delay(1000);
 
 			// product type
+			logger.info("Alert Evaluate Case Date setting up");
 			driver.findElement(By.cssSelector(".select2-selection__choice:nth-child(2) > .select2-selection__choice__remove")).click();
 			delay(500);
 			String[] productTypeValues = dto.getProductType().split(",");
@@ -133,9 +137,11 @@ public class AggregateConfigurationTest extends BrowserSetup {
 			    driver.findElement(By.cssSelector(".select2-container--focus .select2-selection__rendered")).click();
 			    delay(500);
 			}
+			logger.info("Alert Evaluate Case Date setted-up successfully");
 			delay(1000);
 
 			// Date Range
+			logger.info("Alert Date Range setting up");
 			driver.findElement(By.id("select2-alertDateRangeInformationdateRangeEnum-container")).click();
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).click();
 			driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field"))
@@ -155,11 +161,13 @@ public class AggregateConfigurationTest extends BrowserSetup {
 				driver.findElement(By.id("dateRangeEnd")).click();
 				driver.findElement(By.id("dateRangeEnd")).sendKeys(dto.getEndDate());
 			}
+			logger.info("Alert Date Range setting-up successfully");
 			delay(1000);
 			defaultCheckedBoxes("aggregate", defaultCheckedBoxesList);
 			delay(1000);
 			// defaultUncheckedBoxesList.addAll(Arrays.asList("groupBySmq"));
 			defaultUncheckedBoxes("aggregate", defaultUncheckedBoxesList);
+			logger.info("Alert check/uncheck boxes task completed successfully");
 
 			delay(2000);
 			doProductSelection(dto);
@@ -168,7 +176,6 @@ public class AggregateConfigurationTest extends BrowserSetup {
 
 			alertName = createAlertName(dto.getAlertType());
 
-			System.out.println(alertName);
 			delay(2000);
 			addAlertName(alertName);
 			delay(2000);
@@ -181,13 +188,14 @@ public class AggregateConfigurationTest extends BrowserSetup {
 			return alertName;
 
 		} catch (Exception ex) {
-			System.out.println(ex);
+			ex.printStackTrace();
 		}
 		return alertName;
 	}
 
 	@Test
 	public void logout() {
+		logger.info("Logout method called..");
 		{
 			WebElement element = driver.findElement(By.cssSelector(".md-settings"));
 			Actions builder = new Actions(driver);
@@ -200,77 +208,8 @@ public class AggregateConfigurationTest extends BrowserSetup {
 			builder.moveToElement(element, 0, 0).perform();
 		}
 		driver.findElement(By.cssSelector("#MI-logout > .logout")).click();
+		logger.info("............Logout successfully.............");
 	}
 
-	@Test
-	public void getExecutionStatus(String alertName) throws Exception{
-
-		driver.findElement(By.cssSelector(".md-settings-applications")).click();
-		driver.findElement(By.linkText("View Execution Status")).click();
-		driver.findElement(By.id("alertType")).click();
-		{
-			WebElement dropdown = driver.findElement(By.id("alertType"));
-			dropdown.findElement(By.xpath("//option[. = 'Aggregate Configuration']")).click();
-		}
-		
-		while(true) {
-			driver.findElement(By.id("executionStatus")).click();
-			{
-				WebElement dropdown = driver.findElement(By.id("executionStatus"));
-				dropdown.findElement(By.xpath("//option[. = 'Scheduled']")).click();
-			}
-			driver.findElement(By.id("executionStatus")).click();
-			if(driver.getPageSource().contains(alertName)) {
-				delay(5000);
-				continue;
-			}
-			else {
-				while(true) {
-					driver.findElement(By.id("executionStatus")).click();
-					{
-						WebElement dropdown = driver.findElement(By.id("executionStatus"));
-						dropdown.findElement(By.xpath("//option[. = 'In Progress']")).click();
-					}
-					driver.findElement(By.id("executionStatus")).click();
-					if(driver.getPageSource().contains(alertName)) {
-						delay(10000);
-						continue;
-					}
-					else {
-						driver.findElement(By.id("executionStatus")).click();
-						{
-							WebElement dropdown = driver.findElement(By.id("executionStatus"));
-							dropdown.findElement(By.xpath("//option[. = 'Completed']")).click();
-						}
-						driver.findElement(By.id("executionStatus")).click();
-						if(driver.getPageSource().contains(alertName)) {
-							//TODO alert completed successfully 
-							return;
-						}
-						else {
-							driver.findElement(By.id("executionStatus")).click();
-							{
-								WebElement dropdown = driver.findElement(By.id("executionStatus"));
-								dropdown.findElement(By.xpath("//option[. = 'Error']")).click();
-							}
-							driver.findElement(By.id("executionStatus")).click();
-							if(driver.getPageSource().contains(alertName)) {
-								//TODO alert failed 
-								return;
-							}
-							else {
-								//TODO something unexpected happen
-								return;
-							}
-						}
-					}
-					
-				}
-				
-			
-			}
-		
-		}
-	}
-
+	
 }

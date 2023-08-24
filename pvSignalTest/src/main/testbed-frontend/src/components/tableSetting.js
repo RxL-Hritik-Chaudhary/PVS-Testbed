@@ -180,7 +180,7 @@ const columns = [
 			}
 		},
 	},
-	{
+	/*{
 		name: 'Apply Alert Stop List',
 		selector: row => `${row.isApplyAlertStopList}`,
 		sortable: true,
@@ -200,7 +200,7 @@ const columns = [
 				);
 			}
 		},
-	},
+	},*/
 	{
 		name: 'Include Medically Confirmed Cases Only',
 		selector: row => `${row.isIncludeMedicallyConfirmedCases}`,

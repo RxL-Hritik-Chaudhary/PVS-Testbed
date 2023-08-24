@@ -86,6 +86,8 @@ public class BrowserSetup {
         	
             if(!driver.findElement(By.id(property)).isSelected()) {
             	driver.findElement(By.id(property)).click();
+            	logger.info("{} checkBoxes are set checked",property);
+            	
             	try {
 					delay(2000);
 				} catch (Exception e) {
@@ -101,6 +103,8 @@ public class BrowserSetup {
         for (String property : defaultUncheckedBoxesList) {
         	if(driver.findElement(By.id(property)).isSelected()) {
             	driver.findElement(By.id(property)).click();
+            	logger.info("{} checkBoxes are set unchecked",property);
+
             	try {
 					delay(2000);
 				} catch (Exception e) {
@@ -131,28 +135,41 @@ public class BrowserSetup {
 	
 	
 	public void addAlertName(String alertName) {
-		 	driver.findElement(By.name("name")).click();
+		try{
+			driver.findElement(By.name("name")).click();
 		    driver.findElement(By.name("name")).sendKeys(alertName);
+		    logger.info("Alert name dynamically setted as {}",alertName);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		 	
+		    
 	}
 	
 	public void selectPriority(String priority) {
-	    driver.findElement(By.id("priority")).click();
-	    {
-	      WebElement dropdown = driver.findElement(By.id("priority"));
-	      dropdown.findElement(By.xpath("//option[. = '"+priority+"']")).click();
-	    }
-	    driver.findElement(By.id("priority")).click();
+		try {
+			driver.findElement(By.id("priority")).click();
+		    {
+		      WebElement dropdown = driver.findElement(By.id("priority"));
+		      dropdown.findElement(By.xpath("//option[. = '"+priority+"']")).click();
+		    }
+		    driver.findElement(By.id("priority")).click();
+		    logger.info("Alert priority {} setted-up",priority);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
 	}
 
 	public void selectAssignedTo(String assignedTo) {
 		
 	    try {
-	    	System.out.println(assignedTo);
 	        driver.findElement(By.id("select2-assignedTo-container")).click();
 		    delay(1000);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(assignedTo);
 		    delay(2000);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(Keys.ENTER);
+		    logger.info("Alert assignedTo {} setted-up",assignedTo);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -161,6 +178,7 @@ public class BrowserSetup {
 	}
 	
 	public String createAlertName(String alertType) {
+		logger.info("Creating alert name on basis of alert type: {}",alertType); 
 		String prefix="SmokeTestingPVSignalDev";
 		if(alertType.equalsIgnoreCase("Aggregate Case Review")) {
 			prefix += "_AGG_";
@@ -178,10 +196,12 @@ public class BrowserSetup {
 	
 	public void runAlert() {
 		  driver.findElement(By.id("saveRun")).click();
+		  logger.info("Alert start running successfully");
 	}
 	
 	public void addDataSource(String dataSource, TestCaseDTO dto) {
 	    try {
+	    	logger.info("Alert dataSource setting up: {}",dataSource);
 	    	String[] dataSources = dataSource.split(",");
 	    	if(dataSources.length > 1) {
 	    		dto.setIsIntegrated(true);
@@ -194,6 +214,7 @@ public class BrowserSetup {
 			    driver.findElement(By.cssSelector(".select2:nth-child(2) .select2-search:nth-child(2) > .select2-search__field")).sendKeys(Keys.ENTER);
 				delay(2000);
 	        }
+	        logger.info("Alert dataSource setted-up successfully");
 	    	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -204,6 +225,7 @@ public class BrowserSetup {
 	public void doProductSelection(TestCaseDTO dto) {
 		
 	    try {
+	        logger.info("Alert Product Selection starting via PV-Dictionary");
 	    	driver.findElement(By.cssSelector(".wrapper:nth-child(1) .fa")).click();
 			delay(2000);
 	    	if(dto.getIsIntegrated()) {
@@ -237,6 +259,8 @@ public class BrowserSetup {
 	    		delay(2000);
 			   
 	    	}
+	        logger.info("Alert Product Selection completed");
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

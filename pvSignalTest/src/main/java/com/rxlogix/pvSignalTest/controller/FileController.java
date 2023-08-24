@@ -45,7 +45,6 @@ public class FileController {
 				.toUriString();
 		
 		FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
-		System.out.println("Upload mehtod .........");
 		logger.info("----------{} file uploaded successfully---------",fileName);
 		return new ResponseEntity<FileResponse>(fileResponse,HttpStatus.OK);
 	}
@@ -60,7 +59,8 @@ public class FileController {
 		try {
 			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
 		}catch(IOException ex) {
-			System.out.println("Could not determine fileType");
+			logger.error("Could not determine fileType");
+			ex.printStackTrace();
 		}
 		
 		if(contentType==null) {
