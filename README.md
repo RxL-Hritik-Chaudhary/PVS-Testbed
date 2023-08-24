@@ -16,8 +16,8 @@ f. Use command gradle bootRun inside pvSignalTest directory instead of root dire
 
 ## 2.How to push code to this repo
 
-a. All git commands must performed on root directory of project instead of pvSignalTest directory.
-
+a. All git commands must performed on root directory of project instead of pvSignalTest directory. <br/>
+b. Also set origin for this repo manually. <br/>
 
 ##NOTE: git commands will follow on root directory and all gradle/java commands works from pvSignalTest directory, Also for UI code it present in pvSignalTest/src/main/testbed-frontend which built using JS library react.
 
