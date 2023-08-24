@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ExecutionContainer from './sub-component/ExecutionContainer';
 import ChartPage from './sub-component/ChartPage';
 import './TestCasesContainer.css';
+import axios from 'axios';
 
 function ExecutionPage(props) {
 	
@@ -80,6 +81,17 @@ function ExecutionPage(props) {
 		setChartData(chartData)
 		console.log(chartData)
 	}
+	
+	const deleteSmokeAlerts = async () => {
+		axios.delete("http://localhost:8181/deleteAlerts").then(response => {
+			if(response.data == "Success") {
+				console.log("Deleted succesfully")
+			}
+			else{
+				console.log("Error during deletion")
+			}
+		})
+	}
 
 
 
@@ -87,7 +99,7 @@ function ExecutionPage(props) {
 		<div>
 			{/*<ChartPage chartObjectData = {chartData}/>*/}
 			<ExecutionContainer alertNames={props.alertNames} listObjectExecutionStatus={listObjectExecutionStatus} />
-			<button className='btnDeleteDesign' style={{ float: "left", marginLeft: "10px", marginTop: "10px", marginBottom: "20px" }}>
+			<button className='btnDeleteDesign' style={{ float: "left", marginLeft: "10px", marginTop: "10px", marginBottom: "20px" }} onClick={deleteSmokeAlerts}>
 				Delete Test Alerts
 			</button>
 		</div>

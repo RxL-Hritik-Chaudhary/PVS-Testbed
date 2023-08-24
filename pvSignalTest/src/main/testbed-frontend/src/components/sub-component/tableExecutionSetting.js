@@ -58,7 +58,7 @@ function timeDifference(date1, date2) {
 }
 
 //extract product from json row.product
-function extractProduct(productJson) {
+export function extractProduct(productJson) {
 	const x = JSON.parse(`${productJson}`)
 	let val = "";
 	for (var i = 1; i <= 4; i++) {
@@ -81,7 +81,7 @@ function extractProduct(productJson) {
 }
 
 //extract product from json row.product
-function extractProductGroup(dataVal) {
+export function extractProductGroup(dataVal) {
 	console.log("++++++++++++++++++++++++++++++++++++++++++++++")
 	console.log(dataVal)
 		const data = JSON.parse(`${dataVal}`)

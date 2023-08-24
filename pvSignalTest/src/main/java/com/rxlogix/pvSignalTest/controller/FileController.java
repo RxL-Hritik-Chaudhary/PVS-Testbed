@@ -4,6 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -21,16 +24,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.rxlogix.pvSignalTest.dto.FileResponse;
-import com.rxlogix.pvSignalTest.service.FileStorageService;
+import com.rxlogix.pvSignalTest.service.FileStorageServiceImpl;
 
 
 @RestController
 @CrossOrigin("http://localhost:3000")
 @RequestMapping("files")
 public class FileController {
-
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FileController.class);
+	
 	@Autowired
-	private FileStorageService fileStorageService;
+	private FileStorageServiceImpl fileStorageService;
 	
 	@PostMapping
 	public ResponseEntity<FileResponse> uploadFile(@RequestParam("file") MultipartFile file){
@@ -41,12 +45,13 @@ public class FileController {
 				.toUriString();
 		
 		FileResponse fileResponse = new FileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+		logger.info("----------{} file uploaded successfully---------",fileName);
 		return new ResponseEntity<FileResponse>(fileResponse,HttpStatus.OK);
 	}
 	
 	@GetMapping("/{fileName:.+}")
 	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName,HttpServletRequest request){
-		
+
 		Resource resource = fileStorageService.loadFileAsResource(fileName);
 		
 		String contentType = null;
@@ -54,7 +59,8 @@ public class FileController {
 		try {
 			contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
 		}catch(IOException ex) {
-			System.out.println("Could not determine fileType");
+			logger.error("Could not determine fileType");
+			ex.printStackTrace();
 		}
 		
 		if(contentType==null) {

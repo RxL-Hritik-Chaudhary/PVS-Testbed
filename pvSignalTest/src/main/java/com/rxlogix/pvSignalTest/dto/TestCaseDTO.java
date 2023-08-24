@@ -22,9 +22,9 @@ public class TestCaseDTO {
     private Boolean isDataMiningSMQ;
     private Boolean isExcludeNonValidCases;
     private Boolean isIncludeMissingCases;
-    private Boolean isApplyAlertStopList;
+    //private Boolean isApplyAlertStopList;
     private Boolean isIncludeMedicallyConfirmedCases;
-    private String drugType;
+    private String productType;
     private String evaluateCaseDateOn;
     private String limitCaseSeries;
     
@@ -170,13 +170,14 @@ public class TestCaseDTO {
 		this.isIncludeMissingCases = isIncludeMissingCases;
 	}
 
-	public Boolean getIsApplyAlertStopList() {
-		return isApplyAlertStopList;
-	}
+	/*
+	 * public Boolean getIsApplyAlertStopList() { return isApplyAlertStopList; }
+	 */
 
-	public void setIsApplyAlertStopList(Boolean isApplyAlertStopList) {
-		this.isApplyAlertStopList = isApplyAlertStopList;
-	}
+	/*
+	 * public void setIsApplyAlertStopList(Boolean isApplyAlertStopList) {
+	 * this.isApplyAlertStopList = isApplyAlertStopList; }
+	 */
 
 	public Boolean getIsIncludeMedicallyConfirmedCases() {
 		return isIncludeMedicallyConfirmedCases;
@@ -202,12 +203,12 @@ public class TestCaseDTO {
 		this.versionAsOfDate = versionAsOfDate;
 	}
 
-	public String getDrugType() {
-		return drugType;
+	public String getProductType() {
+		return productType;
 	}
 
-	public void setDrugType(String drugType) {
-		this.drugType = drugType;
+	public void setProductType(String productType) {
+		this.productType = productType;
 	}
 
 	public String getEvaluateCaseDateOn() {

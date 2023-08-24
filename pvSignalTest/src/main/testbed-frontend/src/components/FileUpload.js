@@ -1,19 +1,22 @@
-
 import axios from 'axios';
-  
+
 import React,{Component} from 'react';
-  
+import CheckFileAlreadyExists from './CheckFileAlreadyExists';
 class App extends Component {
    
-   constructor(props) {
-	   super(props);
-	   
-   }
-    state = {
+   
+   state = {
   
       // Initially, no file is selected
       selectedFile: null
-    };
+      
+     };
+    
+    constructor(props) {
+	   super(props);
+
+   }
+    
      
     // On file select (from the pop up)
     onFileChange = event => {
@@ -49,6 +52,12 @@ class App extends Component {
 				}
 	  });
     };
+    
+    onFileAlreadyExists = () => {
+		axios.get("http://localhost:8181/api/getFileInfo").then(response => {
+						this.props.dataFromExcelSheet(response.data)
+					});
+	}
      
     // File content to be displayed after
     // file upload is complete
@@ -79,6 +88,9 @@ class App extends Component {
         );
       }
     };
+    
+ 
+    
      
     render() {
      
@@ -91,7 +103,7 @@ class App extends Component {
               File Upload!
             </h3>
             <div>
-                <input type="file" onChange={this.onFileChange} />
+                <input type="file" onChange={this.onFileChange} accept=".xls,.xlsx" />
                 <button className='btnDesign' onClick={this.onFileUpload}>
                   Upload!
                 </button>
@@ -100,8 +112,9 @@ class App extends Component {
           <button className='btnDeleteDesign' style={{margin:"10px 0px 8px 0px"}} onClick={()=>{this.props.executionPage(true)}} >
                   Go to Alert Execution Page
                 </button>
+            <CheckFileAlreadyExists runExistingFileTCs={this.onFileAlreadyExists} />
         </div>
-      );
+      )
     }
   }
   

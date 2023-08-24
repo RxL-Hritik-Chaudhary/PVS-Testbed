@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.By;
@@ -18,10 +20,15 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.slf4j.LoggerFactory;
 
+import com.rxlogix.pvSignalTest.controller.PvSignalTestController;
 import com.rxlogix.pvSignalTest.dto.TestCaseDTO;
+import com.rxlogix.pvSignalTest.service.FileManagerServiceImpl;
 
 public class BrowserSetup {
+	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(BrowserSetup.class);
+
 	public static Properties properties;
 	static WebDriver driver;
 	private Map<String, Object> vars;
@@ -29,29 +36,28 @@ public class BrowserSetup {
 	private StringBuffer verificationErrors = new StringBuffer();
 	@Before
     public void setUp() throws Exception {
-		System.out.println("Setting Up the browser");
+		logger.info("-----Setting Up the browser-----");
 		driver = new ChromeDriver();
         properties = PropertiesWrapper.getPropertiesForUIConfig("");
         String driverKeyName = properties.getProperty("driver.key.name");
         String webdirver = properties.getProperty("browser.driver");
-        System.out.println("=========webdirver======================"+webdirver);
+		logger.info("==============webdirver======================", webdirver);
+
         System.setProperty(driverKeyName, webdirver);
-		
-
-
+	
       
        
         js = (JavascriptExecutor) driver;
         vars = new HashMap<String, Object>();
         
         //TODO pick from config file
-       
-        //driver.get("http://localhost:7070/signal/login/auth");
-        //driver.get("http://10.100.21.22:7070/signal/login/auth");
-        driver.get("http://10.100.22.105:7070/signal/login/auth");
+        //done
+        String appUrl = properties.getProperty("app.url");
+        driver.get(appUrl);
+        logger.info("{}",appUrl);
 		driver.manage().window().maximize();
 		driver.manage().timeouts().implicitlyWait(3600, TimeUnit.SECONDS);
-		System.out.println("Browser setup done");
+
     }
 	
 	@After
@@ -59,6 +65,8 @@ public class BrowserSetup {
         driver.quit();
         String verificationErrorString = verificationErrors.toString();
         if (!"".equals(verificationErrorString)) {
+        	logger.error("Error encountered");
+        	logger.error("{}",verificationErrorString);
             fail(verificationErrorString);
         }
     }
@@ -69,16 +77,17 @@ public class BrowserSetup {
         Thread.sleep(time);
 		} 
 		catch(Exception ex) {
-			System.out.print(ex);
+        	logger.error("Error encountered in deleay() method ... {}",ex);
 		}
     }
 	
 	public void defaultCheckedBoxes(String alertType, List<String> defaultCheckBoxList) {
         for (String property : defaultCheckBoxList) {
-        	System.out.println("property---------------"+property);
-            System.out.println(alertType.concat(".alert.").concat(property));
+        	
             if(!driver.findElement(By.id(property)).isSelected()) {
             	driver.findElement(By.id(property)).click();
+            	logger.info("{} checkBoxes are set checked",property);
+            	
             	try {
 					delay(2000);
 				} catch (Exception e) {
@@ -94,6 +103,8 @@ public class BrowserSetup {
         for (String property : defaultUncheckedBoxesList) {
         	if(driver.findElement(By.id(property)).isSelected()) {
             	driver.findElement(By.id(property)).click();
+            	logger.info("{} checkBoxes are set unchecked",property);
+
             	try {
 					delay(2000);
 				} catch (Exception e) {
@@ -106,13 +117,14 @@ public class BrowserSetup {
     }
 	
 	public void login() {
-		System.out.println("Logging in the system");
+		logger.info("---------Logging in the system---------");
 		driver.findElement(By.id("username")).sendKeys("signaldev");
 	    driver.findElement(By.id("password")).sendKeys("signaldev");
 	    driver.findElement(By.id("loginSubmit")).click();
 	    driver.findElement(By.cssSelector(".md-settings-applications")).click();
 	    driver.findElement(By.cssSelector(".md-settings-applications")).click();
-	    System.out.println("Logged in system");
+		logger.info("---------Logged in successfully----------");
+
 	    try {
 			delay(1000);
 		} catch (Exception e) {
@@ -123,29 +135,41 @@ public class BrowserSetup {
 	
 	
 	public void addAlertName(String alertName) {
-		 	driver.findElement(By.name("name")).click();
+		try{
+			driver.findElement(By.name("name")).click();
 		    driver.findElement(By.name("name")).sendKeys(alertName);
+		    logger.info("Alert name dynamically setted as {}",alertName);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		 	
+		    
 	}
 	
 	public void selectPriority(String priority) {
-		System.out.println(priority);
-	    driver.findElement(By.id("priority")).click();
-	    {
-	      WebElement dropdown = driver.findElement(By.id("priority"));
-	      dropdown.findElement(By.xpath("//option[. = '"+priority+"']")).click();
-	    }
-	    driver.findElement(By.id("priority")).click();
+		try {
+			driver.findElement(By.id("priority")).click();
+		    {
+		      WebElement dropdown = driver.findElement(By.id("priority"));
+		      dropdown.findElement(By.xpath("//option[. = '"+priority+"']")).click();
+		    }
+		    driver.findElement(By.id("priority")).click();
+		    logger.info("Alert priority {} setted-up",priority);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
 	}
 
 	public void selectAssignedTo(String assignedTo) {
 		
 	    try {
-	    	driver.findElement(By.id("select2-assignedTo-container")).click();
+	        driver.findElement(By.id("select2-assignedTo-container")).click();
 		    delay(1000);
-		    System.out.println(assignedTo);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(assignedTo);
 		    delay(2000);
 		    driver.findElement(By.cssSelector(".select2-search--dropdown > .select2-search__field")).sendKeys(Keys.ENTER);
+		    logger.info("Alert assignedTo {} setted-up",assignedTo);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -154,6 +178,7 @@ public class BrowserSetup {
 	}
 	
 	public String createAlertName(String alertType) {
+		logger.info("Creating alert name on basis of alert type: {}",alertType); 
 		String prefix="SmokeTestingPVSignalDev";
 		if(alertType.equalsIgnoreCase("Aggregate Case Review")) {
 			prefix += "_AGG_";
@@ -171,16 +196,17 @@ public class BrowserSetup {
 	
 	public void runAlert() {
 		  driver.findElement(By.id("saveRun")).click();
+		  logger.info("Alert start running successfully");
 	}
 	
 	public void addDataSource(String dataSource, TestCaseDTO dto) {
 	    try {
+	    	logger.info("Alert dataSource setting up: {}",dataSource);
 	    	String[] dataSources = dataSource.split(",");
 	    	if(dataSources.length > 1) {
 	    		dto.setIsIntegrated(true);
 	    	}
 	        for (String dataSrc : dataSources) {
-	            System.out.println(dataSrc);
 		        driver.findElement(By.cssSelector(".select2-container--focus .select2-selection__rendered")).click();
 		        delay(2000);
 			    driver.findElement(By.cssSelector(".select2:nth-child(2) .select2-search:nth-child(2) > .select2-search__field")).sendKeys(dataSrc);
@@ -188,6 +214,7 @@ public class BrowserSetup {
 			    driver.findElement(By.cssSelector(".select2:nth-child(2) .select2-search:nth-child(2) > .select2-search__field")).sendKeys(Keys.ENTER);
 				delay(2000);
 	        }
+	        logger.info("Alert dataSource setted-up successfully");
 	    	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -198,9 +225,9 @@ public class BrowserSetup {
 	public void doProductSelection(TestCaseDTO dto) {
 		
 	    try {
+	        logger.info("Alert Product Selection starting via PV-Dictionary");
 	    	driver.findElement(By.cssSelector(".wrapper:nth-child(1) .fa")).click();
 			delay(2000);
-			System.out.println(dto.getIsIntegrated());
 	    	if(dto.getIsIntegrated()) {
 				driver.findElement(By.xpath("//*[@id=\"parentDivDataSources\"]/span/span[1]/span/ul/li/input")).click();
 			    delay(2000);
@@ -219,7 +246,6 @@ public class BrowserSetup {
 					    delay(2000);
 					    driver.findElement(By.cssSelector(".productColumn")).sendKeys(product);
 					    delay(2000);
-					    System.out.println("Sending Keys");
 					    driver.findElement(By.cssSelector(".productColumn")).sendKeys(Keys.ENTER);
 					    delay(5000);
 					    driver.findElement(By.cssSelector(".dicLi")).click();
@@ -233,6 +259,8 @@ public class BrowserSetup {
 	    		delay(2000);
 			   
 	    	}
+	        logger.info("Alert Product Selection completed");
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

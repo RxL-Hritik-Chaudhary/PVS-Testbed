@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
-import { artificialTheme, columns } from './tableExecutionSetting';
+import { artificialTheme, columns,extractProduct,extractProductGroup  } from './tableExecutionSetting';
 import ChartPage from './ChartPage';
 import ColorCard from './chart-components/ColorCard';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 class ExecutionContainer extends Component {
 
@@ -153,7 +155,7 @@ class ExecutionContainer extends Component {
 	async componentDidMount() {
 
 
-		setInterval(this.fetchExeStatus, 5000)
+		setInterval(this.fetchExeStatus, 7500)
 
 
 	}
@@ -163,6 +165,35 @@ class ExecutionContainer extends Component {
 	componentDidUpdate() {
 
 	}
+	
+	exportPDF = () => {
+    const unit = "pt";
+    const size = "A2"; // Use A1, A2, A3 or A4
+    const orientation = "landscape"; // portrait or landscape
+
+    const marginLeft = 40;
+    const doc = new jsPDF(orientation, unit, size);
+
+    doc.setFontSize(15);
+
+    const title = "Alert Execution Report";
+    const headers = [["ALERT NAME","ALERT TYPE","PRODUCTS","IS_ADHOC","FREQUENCY","EXECUTION STATUS","DATE CREATED","STACK TRACE","RUN DURATION","PE COUNT"
+]];
+
+    const data = this.state.data.map(elt=> [elt.NAME, elt.TYPE, elt.PRODUCTS ? extractProduct(elt.PRODUCTS):extractProductGroup(elt.PRODUCT_GROUP), elt.ADHOC_RUN, elt.FREQUENCY, elt.EX_STATUS, elt.DATE_CREATED, elt.STACK_TRACE, elt.END_TIME, elt.PEC_COUNT!=1 ?elt.PEC_COUNT: 0]);
+
+    let content = {
+      startY: 50,
+      head: headers,
+      body: data
+    };
+
+    doc.text(title, marginLeft, 40).setFontSize(16).setFont(undefined,'bold');
+    doc.setFontSize(16);
+    doc.autoTable(content);
+    
+    doc.save("report.pdf")
+  }
 
 
 	render() {
@@ -185,7 +216,7 @@ class ExecutionContainer extends Component {
 					</div>
 
 				</div>
-				
+	
 				<div className="tableContainer">
 					<DataTable
 						className="Post"
@@ -200,10 +231,12 @@ class ExecutionContainer extends Component {
 						paginationPerPage={10}
 					/>
 				</div>
+				<button className='btnDeleteDesign' style={{ float: "left", marginLeft: "10px", marginTop: "10px", marginBottom: "20px" }} onClick={this.exportPDF}>
+				Export
+			</button>
 			</div>
 		)
 	}
 
 }
 export default ExecutionContainer;
-
